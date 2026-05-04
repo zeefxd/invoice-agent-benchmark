@@ -1,5 +1,5 @@
 MODELS_TO_TEST =[
-    "ollama_chat/gpt-oss-20b",
+    "ollama_chat/gpt-oss:20b",
     "ollama_chat/gemma4:e4b",
     "ollama_chat/qwen3.5:9b"
 ]
