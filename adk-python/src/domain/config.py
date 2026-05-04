@@ -14,6 +14,6 @@ STANDARD_SCENARIO = [
         "Płatność przelewem na konto 12 3456 7890 1234 5678 9012 3456, termin 14 dni."
     ),
     "Prawidłowy numer NIP sprzedawcy to 5260308476, a nabywcy 3623981230.",
-    "Data wystawienia faktury to 2026-04-30, termin 14 dni.",
-    "Tak, wszystko się zgadza. Proszę wygenerować fakturę.",
+    "Data wystawienia faktury to 2025-04-28 a sprzedaży to 2025-04-25, termin 14 dni.",
+    "Tak, wszystko się zgadza. Proszę wygenerować fakturę w formacie JSON.",
 ]
