@@ -66,20 +66,19 @@ export async function runScenario(modelName: string, debug: boolean) {
                 }
                 const event = evt as any;
 
-                if (event.message?.parts) {
-                    for (const part of event.message.parts) {
+                if (event.content?.parts) {
+                    for (const part of event.content.parts) {
                         if (part.text) {
                             if (debug) {
                                 process.stdout.write(`\x1b[90m${part.text}\x1b[0m`);
                             }
                             agentResponse += part.text;
                         }
-                    }
-                } else if (event.type === 'tool_calls') {
-                    for (const tc of event.toolCalls) {
-                        toolCallsThisTurn.push(tc.name);
-                        if (debug) {
-                            console.log(`\n  \x1b[93m[DEBUG] Agent wywołuje narzędzie: ${tc.name}\x1b[0m`);
+                        if (part.functionCall) {
+                            toolCallsThisTurn.push(part.functionCall.name);
+                            if (debug) {
+                                console.log(`\n  \x1b[93m[DEBUG] Agent wywołuje narzędzie: ${part.functionCall.name}\x1b[0m`);
+                            }
                         }
                     }
                 }
