@@ -1,6 +1,8 @@
 plugins {
     kotlin("jvm") version "2.3.20"
     kotlin("plugin.serialization") version "2.3.20"
+    application
+    id("com.gradleup.shadow") version "9.4.1"
 }
 
 group = "org.example"
@@ -23,10 +25,25 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 }
 
+
+application {
+    mainClass.set("org.example.MainKt")
+}
+
 kotlin {
     jvmToolchain(21)
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "org.example.MainKt"
+    }
 }
