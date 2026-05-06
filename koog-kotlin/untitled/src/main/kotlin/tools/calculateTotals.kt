@@ -10,7 +10,7 @@ data class InvoiceTotalResult(
     val net: Double,
     val vat: Double,
     val gross: Double,
-    val error: String
+    val error: String? = null
 )
 
 @Tool("calculate_totals")
@@ -27,5 +27,7 @@ fun calculateTotals(
     val vat = round(vatSum * 100) / 100
     val gross = round(grossSum * 100) / 100
 
-    return InvoiceTotalResult(net = net, vat = vat, gross = gross, error = "")
+    val result =  InvoiceTotalResult(net = net, vat = vat, gross = gross, error = "")
+    println("calculate_totals: $result")
+    return result
 }

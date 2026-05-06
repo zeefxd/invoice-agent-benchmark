@@ -32,9 +32,12 @@ fun validateNIP(
         digits[it].digitToInt() * weights[it]
     } % 11
 
-    return if (checksum == digits[9].digitToInt()) {
+    val result = if (checksum == digits[9].digitToInt()) {
         NipValidationResult(true, "NIP jest poprawny.")
     } else {
         NipValidationResult(false, "NIP ma błędną sumę kontrolną.")
     }
+
+    println("validate_nip: $result")
+    return result
 }
