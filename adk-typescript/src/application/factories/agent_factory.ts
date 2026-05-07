@@ -11,26 +11,26 @@ function initModel(modelName: string): any {
     if (modelName.startsWith("ollama_chat/")) {
         let actualName = modelName.replace("ollama_chat/", "");
 
-        // if (actualName.endsWith(":cloud")) {
-        //     actualName = actualName.replace(":cloud", "");
-        //     console.log(`[FACTORY] Podłączanie chmurowego modelu Ollama: ${actualName}`);
+        if (actualName.endsWith(":cloud")) {
+            actualName = actualName.replace(":cloud", "");
+            console.log(`[FACTORY] Podłączanie chmurowego modelu Ollama: ${actualName}`);
 
-        //     const apiKey = process.env.OLLAMA_API_KEY;
-        //     if (!apiKey) {
-        //         throw new Error("missing OLLAMA_API_KEY");
-        //     }
+            const apiKey = process.env.OLLAMA_API_KEY;
+            if (!apiKey) {
+                throw new Error("missing OLLAMA_API_KEY for cloud model");
+            }
 
-        //     return new Ollama({
-        //         model: actualName,
-        //         baseUrl: "https://ollama.com",
-        //         apiKey: process.env.OLLAMA_API_KEY
-        //     } as any);
-        // }
+            return new Ollama({
+                model: actualName,
+                baseUrl: process.env.OLLAMA_CLOUD_URL || "https://ollama.com",
+                apiKey: apiKey,
+            } as any);
+        }
 
         console.log(`[FACTORY] Podłączanie lokalnego modelu Ollama: ${actualName}`);
         return new Ollama({
             model: actualName,
-            baseUrl: "http://localhost:11434"
+            baseUrl: process.env.OLLAMA_LOCAL_URL || "http://localhost:11434"
         });
     }
 

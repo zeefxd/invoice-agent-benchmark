@@ -2,10 +2,11 @@
 # OLLAMA_BASE_URL = "https://ollama.com/v1"
 
 MODELS_TO_TEST = [
-#	"glm-4.6:cloud",
-    "gpt-oss:20b",
-#   "ollama_chat/gemma4:e4b",
-#   "ollama_chat/qwen3.5:9b",
+  "gpt-oss:20b",
+  "gemma4:31b-cloud",
+  "glm-4.6:cloud",
+  "ollama_chat/gemma4:e4b",
+  "ollama_chat/qwen3.5:9b",
 ]
 
 SYSTEM_PROMPT = """Jesteś profesjonalnym, rzetelnym asystentem do wystawiania faktur VAT w Polsce.
