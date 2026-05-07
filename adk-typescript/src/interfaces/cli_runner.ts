@@ -74,18 +74,24 @@ export async function runScenario(modelName: string, debug: boolean) {
                             }
                             agentResponse += part.text;
                         }
-                        if (part.functionCall) {
-                            toolCallsThisTurn.push(part.functionCall.name);
+                        const fnCall = part.functionCall || part.function_call;
+                        if (fnCall?.name) {
+                            toolCallsThisTurn.push(fnCall.name);
                             if (debug) {
-                                console.log(`\n  \x1b[93m[DEBUG] Agent wywołuje narzędzie: ${part.functionCall.name}\x1b[0m`);
+                                console.log(`\n  \x1b[93m[DEBUG] Agent wywołuje narzędzie: ${fnCall.name}\x1b[0m`);
                             }
                         }
                     }
                 }
 
                 if (event.usageMetadata) {
-                    tokensIn = event.usageMetadata.promptTokens || 0;
-                    tokensOut = event.usageMetadata.candidatesTokenCount || event.usageMetadata.completionTokens || 0;
+                    const um = event.usageMetadata;
+                    tokensIn = um.promptTokens || um.promptTokenCount || um.inputTokens || 0;
+                    tokensOut = um.candidatesTokenCount || um.completionTokens || um.outputTokens || 0;
+                }
+
+                if (!agentResponse && typeof event?.text === 'string' && event.text) {
+                    agentResponse += event.text;
                 }
             }
         } catch (err: any) {

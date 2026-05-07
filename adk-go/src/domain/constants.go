@@ -1,10 +1,10 @@
 package domain
 
 var ModelsToTest = []string{
-    // "ollama_chat/gpt-oss:20b",
-	"ollama_chat/glm-4.6:cloud",
+    // "ollama_chat/glm-4.6:cloud",
+    "ollama_chat/gpt-oss:20b",
     // "ollama_chat/gemma4:e4b",
-    // "ollama_chat/qwen3.5:9b"
+    // "ollama_chat/qwen3.5:9b",
 }
 
 const InvoiceAgentSystemPrompt = `Jesteś profesjonalnym, rzetelnym asystentem do wystawiania faktur VAT w Polsce.

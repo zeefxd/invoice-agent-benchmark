@@ -1,7 +1,8 @@
-MODELS_TO_TEST =[
+MODELS_TO_TEST = [
+#   "ollama_chat/glm-4.6:cloud",
     "ollama_chat/gpt-oss:20b",
-    "ollama_chat/gemma4:e4b",
-    "ollama_chat/qwen3.5:9b"
+#   "ollama_chat/gemma4:e4b",
+#   "ollama_chat/qwen3.5:9b",
 ]
 
 INVOICE_AGENT_SYSTEM_PROMPT = """Jesteś profesjonalnym, rzetelnym asystentem do wystawiania faktur VAT w Polsce.
