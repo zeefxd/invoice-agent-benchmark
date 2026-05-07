@@ -1,8 +1,9 @@
-package org.example.tools
+package tools
 
 import ai.koog.agents.core.tools.annotations.LLMDescription
 import ai.koog.agents.core.tools.annotations.Tool
 import kotlinx.serialization.Serializable
+import org.example.tools.InvoiceLineResult
 import kotlin.math.round
 
 @Serializable

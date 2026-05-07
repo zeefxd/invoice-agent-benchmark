@@ -4,6 +4,8 @@ import ai.koog.agents.core.tools.annotations.LLMDescription
 import ai.koog.agents.core.tools.annotations.Tool
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import tools.InvoiceTotalResult
+import tools.calculateTotals
 
 @Serializable
 data class Address(
