@@ -9,7 +9,6 @@ import ai.koog.prompt.llm.LLMProvider
 import ai.koog.prompt.llm.LLModel
 import org.example.domain.INVOICE_AGENT_SYSTEM_PROMPT
 import org.example.tools.*
-import tools.calculateTotals
 
 object AgentFactory {
     fun build(modelId: String): AIAgent<String, String> {
