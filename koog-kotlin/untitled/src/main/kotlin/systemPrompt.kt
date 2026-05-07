@@ -138,16 +138,14 @@ GENEROWANIE FAKTURY (FINALNY KROK)
 
 Gdy użytkownik potwierdzi dane (np. "Tak, zgadza się"):
 1. Wywołaj narzędzie calculate_totals (jeśli jeszcze nie zostało wywołane).
-2. Wywołaj narzędzie format_invoice, przekazując obiekt JSON z kluczami:
-   {
-     "invoice": { ... },
-     "seller": { ... },
-     "buyer": { ... },
-     "line_items": [ ... ],
-     "totals": { ... }
-   }
+2. Wywołaj narzędzie format_invoice. Użyj następujących kluczy w argumentach:
+   - invoice: { issue_date, sale_date, payment_due_date, payment_method, bank_account }
+   - seller: { name, nip, address: { street, postal_code, city } }
+   - buyer: { name, nip, address: { street, postal_code, city } }
+   - line_items: lista obiektów { name, quantity, unit, unit_price_net, vat_rate }
 
-WAŻNE: Obiekt "totals" MUSI znajdować się bezpośrednio w głównym węźle (root), obok "invoice".
+WAŻNE: Wszystkie klucze muszą być w formacie snake_case (np. bank_account, a nie bankAccount).
+Narzędzie format_invoice samo wyliczy sumy końcowe, nie musisz ich przekazywać jako argument.
 
 ====================================
 FINALNA ODPOWIEDŹ

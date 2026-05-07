@@ -2,30 +2,26 @@ package org.example.tools
 
 import ai.koog.agents.core.tools.annotations.LLMDescription
 import ai.koog.agents.core.tools.annotations.Tool
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable
-data class NIP(val value: String)
-
-@Serializable
 data class Address(
-    val street: String, @SerialName("postal_code") val postalCode: String, val city: String
+    val street: String, val postal_code: String, val city: String
 )
 
 @Serializable
 data class Participant(
-    val name: String, val nip: NIP, val address: Address
+    val name: String, val nip: String, val address: Address
 )
 
 @Serializable
 data class InvoiceMeta(
-    @SerialName("issue_date") val issueDate: String,
-    @SerialName("sale_date") val saleDate: String,
-    @SerialName("payment_due_date") val paymentDueDate: String,
-    @SerialName("payment_method") val paymentMethod: String,
-    @SerialName("bank_account") val bankAccount: String
+    val issue_date: String,
+    val sale_date: String,
+    val payment_due_date: String,
+    val payment_method: String,
+    val bank_account: String
 )
 
 @Serializable
@@ -33,13 +29,8 @@ data class InvoiceLineInput(
     val name: String,
     val quantity: Double = 0.0,
     val unit: String = "",
-    val unitPriceNet: Double = 0.0,
-    val vatRate: String = "23%"
-)
-
-@Serializable
-data class InvoiceInput(
-    val invoice: InvoiceMeta, val seller: Participant, val buyer: Participant, val lineItems: List<InvoiceLineInput>
+    val unit_price_net: Double = 0.0,
+    val vat_rate: String = "23%"
 )
 
 @Serializable
@@ -47,11 +38,11 @@ data class InvoiceItem(
     val name: String,
     val quantity: Double,
     val unit: String,
-    @SerialName("unit_price_net") val unitPriceNet: Double,
-    @SerialName("vat_rate") val vatRate: String,
-    @SerialName("net_total") val netTotal: Double,
-    @SerialName("vat_amount") val vatAmount: Double,
-    @SerialName("gross_total") val grossTotal: Double,
+    val unit_price_net: Double,
+    val vat_rate: String,
+    val net_total: Double,
+    val vat_amount: Double,
+    val gross_total: Double,
 )
 
 @Serializable
@@ -59,8 +50,7 @@ data class InvoiceOutput(
     val invoice: InvoiceMeta,
     val seller: Participant,
     val buyer: Participant,
-    @SerialName("line_items")
-    val lineItems: List<InvoiceItem>,
+    val line_items: List<InvoiceItem>,
     val totals: InvoiceTotalResult
 )
 
@@ -68,16 +58,21 @@ data class InvoiceOutput(
 @Tool("format_invoice")
 @LLMDescription("Formatuje i zwraca gotowy JSON faktury VAT w restrykcyjnej strukturze.")
 fun formatInvoice(
-    @LLMDescription("Dane do faktury ")
-    data: InvoiceInput
+    @LLMDescription("Metadane (issue_date, sale_date, payment_due_date, payment_method, bank_account)")
+    invoice: InvoiceMeta,
+    @LLMDescription("Sprzedawca (name, nip, address: {street, postal_code, city})")
+    seller: Participant,
+    @LLMDescription("Nabywca (name, nip, address: {street, postal_code, city})")
+    buyer: Participant,
+    @LLMDescription("Lista pozycji na fakturze")
+    line_items: List<InvoiceLineInput>
 ): String {
-
     val linesCalculated = mutableListOf<InvoiceLineResult>()
     val items = mutableListOf<InvoiceItem>()
 
-    for (item in data.lineItems) {
+    for (item in line_items) {
         val calc = calculateLine(
-            quantity = item.quantity, unitPriceNet = item.unitPriceNet, vatRate = item.vatRate
+            quantity = item.quantity, unitPriceNet = item.unit_price_net, vatRate = item.vat_rate
         )
 
         if (calc.error?.isNotBlank() ?: false) {
@@ -86,7 +81,10 @@ fun formatInvoice(
 
         linesCalculated.add(
             InvoiceLineResult(
-                netTotal = calc.netTotal, vatAmount = calc.vatAmount, grossTotal = calc.grossTotal, error = calc.error
+                net_total = calc.net_total,
+                vat_amount = calc.vat_amount,
+                gross_total = calc.gross_total,
+                error = calc.error
             )
         )
 
@@ -95,11 +93,11 @@ fun formatInvoice(
                 name = item.name,
                 quantity = item.quantity,
                 unit = item.unit,
-                vatRate = item.vatRate,
-                netTotal = calc.netTotal,
-                unitPriceNet = item.unitPriceNet,
-                vatAmount = calc.vatAmount,
-                grossTotal = calc.grossTotal
+                vat_rate = item.vat_rate,
+                net_total = calc.net_total,
+                unit_price_net = item.unit_price_net,
+                vat_amount = calc.vat_amount,
+                gross_total = calc.gross_total
             )
         )
 
@@ -107,10 +105,15 @@ fun formatInvoice(
 
     val totals = calculateTotals(linesCalculated.toTypedArray())
 
-    val invoiceOutput =  InvoiceOutput(
-        invoice = data.invoice, seller = data.seller, buyer = data.buyer, lineItems = items, totals = totals
+    val invoiceOutput = InvoiceOutput(
+        invoice = invoice, seller = seller, buyer = buyer, line_items = items, totals = totals
     )
 
-    val result = Json.encodeToString(invoiceOutput)
+    val jsonBuilder = Json {
+        ignoreUnknownKeys = true; isLenient = true;
+        explicitNulls = false; prettyPrint = true
+    }
+
+    val result = jsonBuilder.encodeToString(invoiceOutput)
     return result
 }

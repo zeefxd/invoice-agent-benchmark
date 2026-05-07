@@ -7,7 +7,10 @@ import kotlin.math.round
 
 @Serializable
 data class InvoiceLineResult(
-    val netTotal: Double, val vatAmount: Double, val grossTotal: Double, val error: String? = null
+    val net_total: Double,
+    val vat_amount: Double,
+    val gross_total: Double,
+    val error: String? = null
 )
 
 @Tool("calculate_line")
@@ -24,9 +27,9 @@ fun calculateLine(
     val key = vatRate.lowercase().replace(" ", "")
     val rate = rates.getOrElse(key) {
         return InvoiceLineResult(
-            netTotal = 0.0,
-            vatAmount = 0.0,
-            grossTotal = 0.0,
+            net_total = 0.0,
+            vat_amount = 0.0,
+            gross_total = 0.0,
             error = "Nieznana stawka VAT jako string $key. Dozwolone: ${rates.entries.joinToString()}"
         )
     }
@@ -36,9 +39,9 @@ fun calculateLine(
     val grossTotal = netTotal + vatAmount
 
     val result = InvoiceLineResult(
-        netTotal = round(netTotal * 100) / 100.0,
-        vatAmount = round(vatAmount * 100) / 100.0,
-        grossTotal = round(grossTotal * 100) / 100.0,
+        net_total = round(netTotal * 100) / 100.0,
+        vat_amount = round(vatAmount * 100) / 100.0,
+        gross_total = round(grossTotal * 100) / 100.0,
     )
 
     println("calculate_line: $result")
