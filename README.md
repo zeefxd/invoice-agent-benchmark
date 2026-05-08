@@ -159,6 +159,6 @@ Each agent run records:
 
 ## Further Resources
 
-- [Google ADK Documentation](https://ai.google.dev/docs)
+- [Google ADK Documentation](https://adk.dev/get-started/)
 - [JetBrains Koog](https://www.jetbrains.com/koog/)
 - [RAPORT.md](./RAPORT.md) - Detailed benchmark results
