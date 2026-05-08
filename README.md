@@ -157,14 +157,6 @@ Each agent run records:
 - Generated JSON correctness
 - Schema validation result
 
-## Generating the Report
-
-```bash
-python scripts/generate_report.py
-```
-
-The report will be saved in `RAPORT.md` and `results/summary.csv`.
-
 ## Further Resources
 
 - [Google ADK Documentation](https://ai.google.dev/docs)
